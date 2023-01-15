@@ -4,7 +4,9 @@
 // char *file_path = "data/red-circle.svg";
 char *file_path = "data/hello.txt";
 long file_length;
-char *buffer;
+unsigned char *buffer;
+
+void show_bytes(unsigned char *start, int len);
 
 int main()
 {
@@ -14,12 +16,15 @@ int main()
     file_length = ftell(p_file);
     rewind(p_file);
 
-    buffer = (char *)malloc(file_length * sizeof(char));
+    buffer = (unsigned char *)malloc(file_length * sizeof(char));
 
     fread(buffer, file_length, 1, p_file);
     fclose(p_file);
 
-    printf(buffer);
+    printf("%s", buffer);
+    printf("\n");
+    
+    show_bytes(buffer, sizeof(file_length * sizeof(char)));
 
     unsigned int *bits = (unsigned int *)malloc(file_length * 8 * sizeof(unsigned int));
     unsigned int bit = 0;
@@ -40,4 +45,12 @@ int main()
     free(bits);
 
     return 0;
+}
+
+void show_bytes(unsigned char *start, int len)
+{
+    int i;
+    for (i = 0; i < len; i++)
+    printf("%p\t0x%.2x\n",start+i, *(start+i));
+  printf("\n");
 }
