@@ -4,54 +4,46 @@
 
 char *file_path = "data/hello1.txt";
 long file_length;
-unsigned char *buffer;
 
-void get_bits(unsigned char *buffer);
-void show_memory_location(unsigned char *start, long len);
-void show_bits(unsigned int *bits, long len);
-void count_bits(unsigned int *bits, long len);
+unsigned char *open_file(char *file_path);
+unsigned int *get_bits(unsigned char *buffer);
+unsigned int *count_bits(unsigned int *bits, long len);
+
+void print_bits(unsigned int *bits, long len);
+void print_intergers(unsigned int *sequence);
 
 int main()
 {
-    FILE *p_file;
-    p_file = fopen(file_path, "rb");
+    unsigned char *buffer = open_file(file_path);
+    unsigned int *bits = get_bits(buffer);
+    unsigned int *sequence = count_bits(bits, (file_length * CHAR_BIT));
 
-    fseek(p_file, 0, SEEK_END);
-    file_length = ftell(p_file);
-    rewind(p_file);
+    print_bits(bits, (file_length * CHAR_BIT));
+    print_intergers(sequence);
 
-    buffer = (unsigned char *)malloc(file_length * sizeof(char));
-
-    fread(buffer, file_length, 1, p_file);
-
-    get_bits(buffer);
-
-    fclose(p_file);
+    free(bits);
     free(buffer);
     return 0;
 }
 
-void count_bits(unsigned int *bits, long len)
+unsigned char *open_file(char *file_path)
 {
-    unsigned int count = 0;
-    unsigned int previous = bits[len];
-    unsigned int bit;
+    FILE *p_file = fopen(file_path, "rb");
 
-    for (bit = 1; bit < len; bit++)
-    {
-        count++;
-        if (bits[bit] != previous)
-        {
-            printf("%u", count);
-            count = 0;
-            previous = bits[bit];
-        }
+    fseek(p_file, 0, SEEK_END);
+    file_length = ftell(p_file);
 
-    }
-    printf("\n");
+    rewind(p_file);
+
+    unsigned char *buffer = (unsigned char *)malloc(file_length * sizeof(char));
+
+    fread(buffer, file_length, 1, p_file);
+    fclose(p_file);
+
+    return buffer;
 }
 
-void get_bits(unsigned char *buffer)
+unsigned int *get_bits(unsigned char *buffer)
 {
     unsigned int *bits = (unsigned int *)malloc(file_length * CHAR_BIT * sizeof(unsigned int));
     unsigned int byte = 0;
@@ -62,35 +54,53 @@ void get_bits(unsigned char *buffer)
         unsigned char b = buffer[byte];
 
         for (int bit = 0; bit < CHAR_BIT; bit++)
-        {
-            printf("%u", (b >> bit) & 1);
             bits[byte_level + bit] = (b >> bit) & 1;
-        }
 
         byte_level = byte_level + CHAR_BIT;
     }
-    printf("\n");
-
-    show_bits(bits, (file_length * CHAR_BIT));
-    count_bits(bits, (file_length * CHAR_BIT));
-
-    free(bits);
+    return bits;
 }
 
-void show_memory_location(unsigned char *start, long len)
+unsigned int *count_bits(unsigned int *bits, long len)
 {
-    int i;
-    for (i = 0; i < len; i++)
-        printf("%p\t0x%.2x\n", start + i, *(start + i));
-    printf("\n");
-}
+    unsigned int sequence[10];
+    unsigned int count = 0;
+    unsigned int previous = bits[len];
 
-void show_bits(unsigned int *bits, long len)
-{
-    unsigned int bit = 0;
-    for (bit = 0; bit < len; bit++)
+    // define the first type of the first bit count
+    printf("%u", previous);
+
+    for (int i = 1; i < len; i++)
     {
-        printf("%u", bits[bit]);
+        count++;
+        if (bits[i] != previous)
+        {
+            printf("%u", count);
+            count = 0;
+            previous = bits[i];
+        }
+    }
+
+    printf("%u", count + 1);
+
+    printf("\n");
+    return sequence;
+}
+
+void print_bits(unsigned int *bits, long len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        printf("%u", bits[i]);
+    }
+    printf("\n");
+}
+
+void print_intergers(unsigned int *sequence)
+{
+    for (int i = 0; i < 10; i++)
+    {
+        printf("%u", sequence[i]);
     }
     printf("\n");
 }
