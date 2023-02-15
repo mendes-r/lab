@@ -4,25 +4,28 @@
 
 char *file_path = "data/hello1.txt";
 long file_length;
+long count_size = 0;
 
 unsigned char *open_file(char *file_path);
 unsigned int *get_bits(unsigned char *buffer);
-unsigned int *count_bits(unsigned int *bits, long len);
+unsigned int *count_bits(unsigned int *bits);
 
-void print_bits(unsigned int *bits, long len);
+void print_bits(unsigned int *bits);
 void print_intergers(unsigned int *sequence);
 
 int main()
 {
     unsigned char *buffer = open_file(file_path);
     unsigned int *bits = get_bits(buffer);
-    unsigned int *sequence = count_bits(bits, (file_length * CHAR_BIT));
+    unsigned int *sequence = count_bits(bits);
 
-    print_bits(bits, (file_length * CHAR_BIT));
+    print_bits(bits);
     print_intergers(sequence);
 
-    free(bits);
     free(buffer);
+    free(bits);
+    free(sequence);
+
     return 0;
 }
 
@@ -61,34 +64,49 @@ unsigned int *get_bits(unsigned char *buffer)
     return bits;
 }
 
-unsigned int *count_bits(unsigned int *bits, long len)
+unsigned int *count_bits(unsigned int *bits)
 {
-    unsigned int sequence[10];
+    int len = file_length * CHAR_BIT;
+
+    unsigned int *sequence = (unsigned int *)malloc(len  * sizeof(unsigned int));
     unsigned int count = 0;
     unsigned int previous = bits[len];
 
     // define the first type of the first bit count
     printf("%u", previous);
+    sequence[count_size] = previous;
 
     for (int i = 1; i < len; i++)
     {
         count++;
         if (bits[i] != previous)
         {
+            count_size ++;
             printf("%u", count);
+            sequence[count_size] = count;
             count = 0;
             previous = bits[i];
         }
     }
 
-    printf("%u", count + 1);
+    count_size ++;
+    sequence[count_size] = count;
 
+    printf("%u", count + 1);
     printf("\n");
+
+    printf("%ld", count_size);
+    printf("\n");
+
+    sequence = realloc(sequence, count_size);
+
     return sequence;
 }
 
-void print_bits(unsigned int *bits, long len)
+void print_bits(unsigned int *bits)
 {
+    int len = file_length * CHAR_BIT;
+
     for (int i = 0; i < len; i++)
     {
         printf("%u", bits[i]);
@@ -98,9 +116,13 @@ void print_bits(unsigned int *bits, long len)
 
 void print_intergers(unsigned int *sequence)
 {
-    for (int i = 0; i < 10; i++)
+    printf("%ld", count_size);
+    printf("\n");
+
+    for (int i = 0; i < count_size; i++)
     {
         printf("%u", sequence[i]);
+        printf("/");
     }
     printf("\n");
 }
