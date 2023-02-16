@@ -3,8 +3,8 @@
 #include <limits.h>
 
 char *file_path = "data/hello1.txt";
-long file_length;
-long count_size = 0;
+unsigned long file_length;
+unsigned long count_size = 0;
 
 unsigned char *open_file(char *file_path);
 unsigned int *get_bits(unsigned char *buffer);
@@ -66,11 +66,11 @@ unsigned int *get_bits(unsigned char *buffer)
 
 unsigned int *count_bits(unsigned int *bits)
 {
-    int len = file_length * CHAR_BIT;
+    unsigned long len = file_length * CHAR_BIT;
 
-    unsigned int *sequence = (unsigned int *)malloc(len  * sizeof(unsigned int));
-    unsigned int count = 0;
-    unsigned int previous = bits[len];
+    unsigned int *sequence = (unsigned int *)malloc(len * sizeof(unsigned int));
+    unsigned long count = 0;
+    unsigned int previous = bits[0];
 
     // define the first type of the first bit count
     printf("%u", previous);
@@ -81,24 +81,21 @@ unsigned int *count_bits(unsigned int *bits)
         count++;
         if (bits[i] != previous)
         {
-            count_size ++;
-            printf("%u", count);
+            count_size++;
+            printf("%lu", count);
             sequence[count_size] = count;
             count = 0;
             previous = bits[i];
         }
     }
 
-    count_size ++;
-    sequence[count_size] = count;
+    count_size++;
+    sequence[count_size] = count + 1;
 
-    printf("%u", count + 1);
+    printf("%lu", count + 1);
     printf("\n");
 
-    printf("%ld", count_size);
-    printf("\n");
-
-    sequence = realloc(sequence, count_size);
+    sequence = (unsigned int *)realloc(sequence, count_size * sizeof(unsigned int));
 
     return sequence;
 }
@@ -116,13 +113,9 @@ void print_bits(unsigned int *bits)
 
 void print_intergers(unsigned int *sequence)
 {
-    printf("%ld", count_size);
-    printf("\n");
-
-    for (int i = 0; i < count_size; i++)
+    for (int i = 0; i <= count_size; i++)
     {
         printf("%u", sequence[i]);
-        printf("/");
     }
     printf("\n");
 }
