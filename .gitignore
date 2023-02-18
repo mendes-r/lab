@@ -6,6 +6,10 @@
 # C
 *.o
 bin/
+*.dSYM
+
+#IDE
+.vscode
 
 # Node artifact files
 node_modules/
