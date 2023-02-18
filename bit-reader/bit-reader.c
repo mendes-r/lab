@@ -2,25 +2,31 @@
 #include <stdio.h>
 #include <limits.h>
 
-char *file_path = "data/hello1.txt";
-unsigned long file_length;
-unsigned long count_size = 0;
+typedef struct FileInfo {
+    char *path;
+    unsigned long length;
+    unsigned long counter_size;
+} FileInfo;
 
-unsigned char *open_file(char *file_path);
-unsigned int *get_bits(unsigned char *buffer);
-unsigned int *count_bits(unsigned int *bits);
+unsigned char *open_file(FileInfo *file_info);
+unsigned int *get_bits(unsigned char *buffer, FileInfo *file_info);
+unsigned int *count_bits(unsigned int *bits, FileInfo *file_info);
 
-void print_bits(unsigned int *bits);
-void print_intergers(unsigned int *sequence);
+void print_array(unsigned int *bits, unsigned long len);
 
 int main()
 {
-    unsigned char *buffer = open_file(file_path);
-    unsigned int *bits = get_bits(buffer);
-    unsigned int *sequence = count_bits(bits);
+    FileInfo file_info;
+    file_info.path = "data/hello1.txt";
+    file_info.length = 0;
+    file_info.counter_size = 0;
 
-    print_bits(bits);
-    print_intergers(sequence);
+    unsigned char *buffer = open_file(&file_info);
+    unsigned int *bits = get_bits(buffer, &file_info);
+    unsigned int *sequence = count_bits(bits, &file_info);
+
+    print_array(bits, file_info.length * CHAR_BIT);
+    print_array(sequence, file_info.counter_size);
 
     free(buffer);
     free(bits);
@@ -29,93 +35,72 @@ int main()
     return 0;
 }
 
-unsigned char *open_file(char *file_path)
+unsigned char *open_file(FileInfo *file_info)
 {
-    FILE *p_file = fopen(file_path, "rb");
+    FILE *p_file = fopen(file_info->path, "rb");
 
     fseek(p_file, 0, SEEK_END);
-    file_length = ftell(p_file);
-
+    file_info->length = ftell(p_file);
     rewind(p_file);
 
-    unsigned char *buffer = (unsigned char *)malloc(file_length * sizeof(char));
+    unsigned char *buffer = (unsigned char *)malloc(file_info->length * sizeof(char));
 
-    fread(buffer, file_length, 1, p_file);
+    fread(buffer, file_info->length, 1, p_file);
     fclose(p_file);
 
     return buffer;
 }
 
-unsigned int *get_bits(unsigned char *buffer)
+unsigned int *get_bits(unsigned char *buffer, FileInfo *file_info)
 {
-    unsigned int *bits = (unsigned int *)malloc(file_length * CHAR_BIT * sizeof(unsigned int));
-    unsigned int byte = 0;
+    unsigned int *bits = (unsigned int *)malloc(file_info->length * CHAR_BIT * sizeof(unsigned int));
     unsigned int byte_level = 0;
 
-    for (byte = 0; byte < file_length; byte++)
+    for (int byte = 0; byte < file_info->length; byte++)
     {
-        unsigned char b = buffer[byte];
+        unsigned char character = buffer[byte];
 
         for (int bit = 0; bit < CHAR_BIT; bit++)
-            bits[byte_level + bit] = (b >> bit) & 1;
+            bits[byte_level + bit] = (character >> bit) & 1;
 
         byte_level = byte_level + CHAR_BIT;
     }
     return bits;
 }
 
-unsigned int *count_bits(unsigned int *bits)
+unsigned int *count_bits(unsigned int *bits, FileInfo *file_info)
 {
-    unsigned long len = file_length * CHAR_BIT;
-
+    unsigned long len = file_info->length * CHAR_BIT;
     unsigned int *sequence = (unsigned int *)malloc(len * sizeof(unsigned int));
     unsigned long count = 0;
     unsigned int previous = bits[0];
 
     // define the first type of the first bit count
-    printf("%u", previous);
-    sequence[count_size] = previous;
+    sequence[file_info->counter_size] = previous;
 
     for (int i = 1; i < len; i++)
     {
         count++;
         if (bits[i] != previous)
         {
-            count_size++;
-            printf("%lu", count);
-            sequence[count_size] = count;
+            file_info->counter_size++;
+            sequence[file_info->counter_size] = count;
             count = 0;
             previous = bits[i];
         }
     }
 
-    count_size++;
-    sequence[count_size] = count + 1;
-
-    printf("%lu", count + 1);
-    printf("\n");
-
-    sequence = (unsigned int *)realloc(sequence, count_size * sizeof(unsigned int));
-
-    return sequence;
+    file_info->counter_size++;
+    sequence[file_info->counter_size] = count + 1;
+    return (unsigned int *)realloc(sequence, file_info->counter_size * sizeof(unsigned int));
 }
 
-void print_bits(unsigned int *bits)
+void print_array(unsigned int *bits, unsigned long len)
 {
-    int len = file_length * CHAR_BIT;
-
     for (int i = 0; i < len; i++)
     {
         printf("%u", bits[i]);
     }
-    printf("\n");
+    printf("\n");   
 }
 
-void print_intergers(unsigned int *sequence)
-{
-    for (int i = 0; i <= count_size; i++)
-    {
-        printf("%u", sequence[i]);
-    }
-    printf("\n");
-}
