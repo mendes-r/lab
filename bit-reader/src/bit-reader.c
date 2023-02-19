@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <fraction.h>
 
-typedef struct FileInfo
-{
+typedef struct FileInfo {
     char *path;
     unsigned long length;
     unsigned long counter_size;
@@ -18,7 +18,7 @@ void print_array(unsigned int *bits, unsigned long len);
 int main()
 {
     FileInfo file_info;
-    file_info.path = "../data/hello1.txt";
+    file_info.path = "data/hello1.txt";
     file_info.length = 0;
     file_info.counter_size = 0;
 
@@ -29,7 +29,9 @@ int main()
     print_array(bits, file_info.length * CHAR_BIT);
     print_array(sequence, file_info.counter_size);
 
-    free(buffer);   
+    to_fraction(sequence, file_info.counter_size);
+
+    free(buffer);
     free(bits);
     free(sequence);
 
@@ -102,5 +104,6 @@ void print_array(unsigned int *bits, unsigned long len)
     {
         printf("%u", bits[i]);
     }
-    printf("\n");
+    printf("\n");   
 }
+
