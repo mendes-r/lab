@@ -27,8 +27,6 @@ run:
 clean:
 	@rm $(BIN_DIR)/*.o
 
-
 test:
 	@mkdir -p bin
 	@$(CC) $(CFLAGS) -o $(BIN_DIR)$(TEST).o $(SRC_DIR)$(TEST).c && $(BIN_DIR)$(TEST).o
-
