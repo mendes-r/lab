@@ -4,6 +4,7 @@ CFLAGS=-Wall
 APP=bit-reader
 FR=fraction
 DEF=definition
+TEST=test
 
 BIN_DIR=./bin/
 SRC_DIR=./src/
@@ -25,3 +26,9 @@ run:
 
 clean:
 	@rm $(BIN_DIR)/*.o
+
+
+test:
+	@mkdir -p bin
+	@$(CC) $(CFLAGS) -o $(BIN_DIR)$(TEST).o $(SRC_DIR)$(TEST).c && $(BIN_DIR)$(TEST).o
+

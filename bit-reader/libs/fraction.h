@@ -3,6 +3,6 @@
 #ifndef FRACTION_DOT_H
 #define FRACTION_DOT_H
 
-CHUNK *to_fraction(unsigned int *sequence, unsigned long len);
+CHUNK *to_fraction(uint8_t *sequence, unsigned long len);
 
 #endif /*FRACTION_DOT_H*/

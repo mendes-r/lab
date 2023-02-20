@@ -5,9 +5,9 @@
 
 #include "fraction.h"
 
-CHUNK get_numerator(unsigned int *sequence, unsigned long len);
+CHUNK get_numerator(uint8_t *sequence, unsigned long len);
 
-CHUNK *to_fraction(unsigned int *sequence, unsigned long len)
+CHUNK *to_fraction(uint8_t *sequence, unsigned long len)
 {
     CHUNK numerator = get_numerator(sequence, len);
     CHUNK denominator = (unsigned long)pow(10, len - 1);
@@ -19,7 +19,7 @@ CHUNK *to_fraction(unsigned int *sequence, unsigned long len)
     return 0;
 }
 
-CHUNK get_numerator(unsigned int *sequence, unsigned long len)
+CHUNK get_numerator(uint8_t *sequence, unsigned long len)
 {
     CHUNK result = 0;
     CHUNK decimal_place = (unsigned long)pow(10, len - 1);

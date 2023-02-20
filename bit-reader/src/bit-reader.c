@@ -5,10 +5,10 @@
 #include <definition.h>
 
 BYTE *open_file(FINFO *file_info);
-unsigned int *get_bits(unsigned char *buffer, FINFO *file_info);
-unsigned int *count_bits(unsigned int *bits, FINFO *file_info);
+uint8_t *get_bits(BYTE *buffer, FINFO *file_info);
+uint8_t *count_bits(uint8_t *bits, FINFO *file_info);
 
-void print_array(unsigned int *bits, unsigned long len);
+void print_array(uint8_t *bits, unsigned long len);
 
 int main()
 {
@@ -18,8 +18,8 @@ int main()
     file_info.counter_size = 0;
 
     BYTE *buffer = open_file(&file_info);
-    unsigned int *bits = get_bits(buffer, &file_info);
-    unsigned int *sequence = count_bits(bits, &file_info);
+    uint8_t *bits = get_bits(buffer, &file_info);
+    uint8_t *sequence = count_bits(bits, &file_info);
 
     print_array(bits, file_info.length * CHAR_BIT);
     print_array(sequence, file_info.counter_size);
@@ -49,10 +49,10 @@ BYTE *open_file(FINFO *file_info)
     return buffer;
 }
 
-unsigned int *get_bits(BYTE *buffer, FINFO *file_info)
+uint8_t *get_bits(BYTE *buffer, FINFO *file_info)
 {
-    unsigned int *bits = (unsigned int *)malloc(file_info->length * CHAR_BIT * sizeof(unsigned int));
-    unsigned int byte_level = 0;
+    uint8_t *bits = (uint8_t *)malloc(file_info->length * CHAR_BIT * sizeof(uint8_t));
+    uint8_t byte_level = 0;
 
     for (int byte = 0; byte < file_info->length; byte++)
     {
@@ -66,12 +66,12 @@ unsigned int *get_bits(BYTE *buffer, FINFO *file_info)
     return bits;
 }
 
-unsigned int *count_bits(unsigned int *bits, FINFO *file_info)
+uint8_t *count_bits(uint8_t *bits, FINFO *file_info)
 {
     unsigned long len = file_info->length * CHAR_BIT;
-    unsigned int *sequence = (unsigned int *)malloc(len * sizeof(unsigned int));
+    uint8_t *sequence = (uint8_t *)malloc(len * sizeof(uint8_t));
     unsigned long count = 0;
-    unsigned int previous = bits[0];
+    uint8_t previous = bits[0];
 
     // define the first type of the first bit count
     sequence[file_info->counter_size] = previous;
@@ -90,10 +90,10 @@ unsigned int *count_bits(unsigned int *bits, FINFO *file_info)
 
     file_info->counter_size++;
     sequence[file_info->counter_size] = count + 1;
-    return (unsigned int *)realloc(sequence, file_info->counter_size * sizeof(unsigned int));
+    return (uint8_t *)realloc(sequence, file_info->counter_size * sizeof(uint8_t));
 }
 
-void print_array(unsigned int *bits, unsigned long len)
+void print_array(uint8_t *bits, unsigned long len)
 {
     for (int i = 0; i < len; i++)
     {
