@@ -3,13 +3,14 @@ CFLAGS=-Wall
 
 APP=bit-reader
 FR=fraction
+DEF=definition
 
 BIN_DIR=./bin/
 SRC_DIR=./src/
 LIBS_DIR=./libs/
 
 INCLUDE = -Ilibs/
-DEPS=$(LIBS_DIR)$(FR).h
+DEPS=$(LIBS_DIR)$(FR).h $(LIBS_DIR)$(DEF).h
 
 # source: https://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 #

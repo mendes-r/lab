@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <definition.h>
 
 #include "fraction.h"
 
-unsigned long get_numerator(unsigned int *sequence, unsigned long len);
+CHUNK get_numerator(unsigned int *sequence, unsigned long len);
 
-int *to_fraction(unsigned int *sequence, unsigned long len)
+CHUNK *to_fraction(unsigned int *sequence, unsigned long len)
 {
-    unsigned long numerator = get_numerator(sequence, len);
-    unsigned long denominator = (unsigned long)pow(10, len - 1);
+    CHUNK numerator = get_numerator(sequence, len);
+    CHUNK denominator = (unsigned long)pow(10, len - 1);
 
     printf("\n");
     printf("%lu / %lu", numerator, denominator);
@@ -18,10 +19,10 @@ int *to_fraction(unsigned int *sequence, unsigned long len)
     return 0;
 }
 
-unsigned long get_numerator(unsigned int *sequence, unsigned long len)
+CHUNK get_numerator(unsigned int *sequence, unsigned long len)
 {
-    unsigned long result = 0;
-    unsigned long decimal_place = (unsigned long)pow(10, len - 1);
+    CHUNK result = 0;
+    CHUNK decimal_place = (unsigned long)pow(10, len - 1);
 
     for (int i = 0; i < len; i++)
     {
