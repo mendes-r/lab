@@ -13,7 +13,7 @@ void print_array(uint8_t *bits, unsigned long len);
 int main()
 {
     FINFO file_info;
-    file_info.path = "data/hello2.txt";
+    file_info.path = "data/hello1.txt";
     file_info.length = 0;
     file_info.counter_size = 0;
 

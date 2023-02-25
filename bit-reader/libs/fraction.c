@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include <definition.h>
 
@@ -16,10 +17,16 @@ CHUNK *to_fraction(uint8_t *sequence, long len)
     // define chunk max length
     uint8_t chunk_len = get_chunk_len();
     uint8_t *chunk = &sequence[0];
+    bool flag = true;
 
     // while loop instead and deal with last bits
-    while(len > 0)
+    while (flag)
     {
+
+        // prevent smaller numbers that the chunk_len
+        if (chunk_len > len)
+            chunk_len = len;
+
         // get numerator and denominator for that chunk
         CHUNK numerator = get_numerator(chunk, chunk_len);
         CHUNK denominator = get_denominator(chunk_len);
@@ -29,13 +36,23 @@ CHUNK *to_fraction(uint8_t *sequence, long len)
         printf("\n");
         printf("%lu", len);
         printf("\n");
-        
-        len = len - chunk_len;
+
         chunk = &chunk[chunk_len];
 
-        sleep(1);
+        len = len - chunk_len;
+
+        if (len < chunk_len && len != 0)
+        {
+            chunk_len = len;
+        }
+        else if (len == 0)
+        {
+            flag = false;
+        }
+
+        // sleep(1);
     }
-    
+
     return 0;
 }
 
@@ -70,6 +87,8 @@ uint8_t get_chunk_len()
         max = max / 10;
         count++;
     }
-    
-    return count;
+
+    // minus one to prevent overflow
+    // TODO improve the above commented problem
+    return count - 1;
 }
