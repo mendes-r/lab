@@ -13,7 +13,7 @@ void print_array(uint8_t *bits, unsigned long len);
 int main()
 {
     FINFO file_info;
-    file_info.path = "data/hello1.txt";
+    file_info.path = "data/hello2.txt";
     file_info.length = 0;
     file_info.counter_size = 0;
 
@@ -90,6 +90,8 @@ uint8_t *count_bits(uint8_t *bits, FINFO *file_info)
 
     file_info->counter_size++;
     sequence[file_info->counter_size] = count + 1;
+    file_info->counter_size++;
+
     return (uint8_t *)realloc(sequence, file_info->counter_size * sizeof(uint8_t));
 }
 
@@ -99,6 +101,5 @@ void print_array(uint8_t *bits, unsigned long len)
     {
         printf("%u", bits[i]);
     }
-    printf("\n");   
+    printf("\n");
 }
-

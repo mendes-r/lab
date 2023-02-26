@@ -3,7 +3,6 @@
 #include <math.h>
 #include <unistd.h>
 #include <stdbool.h>
-
 #include <definition.h>
 
 #include "fraction.h"
@@ -11,18 +10,22 @@
 uint8_t get_chunk_len();
 CHUNK get_numerator(uint8_t *sequence, unsigned long len);
 CHUNK get_denominator(unsigned long len);
+CHUNK gcf(CHUNK num1, CHUNK num2);
+void reduce_fraction(CHUNK numerator, CHUNK denominator);
 
 CHUNK *to_fraction(uint8_t *sequence, long len)
 {
     // define chunk max length
     uint8_t chunk_len = get_chunk_len();
-    uint8_t *chunk = &sequence[0];
-    bool flag = true;
+    // first bit shows which bit is the first
+    // TODO where to store the first bit
+    uint8_t *chunk = &sequence[1];
+
+    double result = 0;
 
     // while loop instead and deal with last bits
-    while (flag)
+    while (chunk_len > 0)
     {
-
         // prevent smaller numbers that the chunk_len
         if (chunk_len > len)
             chunk_len = len;
@@ -31,28 +34,29 @@ CHUNK *to_fraction(uint8_t *sequence, long len)
         CHUNK numerator = get_numerator(chunk, chunk_len);
         CHUNK denominator = get_denominator(chunk_len);
 
-        printf("\n");
+        printf("chunk size: %hhu -- ", chunk_len);
         printf("%lu / %lu", numerator, denominator);
+        printf(" = %f", numerator / (double)denominator);
         printf("\n");
-        printf("%lu", len);
-        printf("\n");
+
+        result = result + (numerator / (double)denominator);
 
         chunk = &chunk[chunk_len];
-
         len = len - chunk_len;
 
         if (len < chunk_len && len != 0)
-        {
-            chunk_len = len;
-        }
-        else if (len == 0)
-        {
-            flag = false;
-        }
-
-        // sleep(1);
+            chunk_len = len - 1;
     }
+    return 0;
+}
 
+void reduce_fraction(CHUNK numerator, CHUNK denominator)
+{
+    gcf(numerator, denominator);
+}
+
+CHUNK gcf(CHUNK num1, CHUNK num2)
+{
     return 0;
 }
 
@@ -74,7 +78,7 @@ CHUNK get_numerator(uint8_t *sequence, unsigned long len)
 
 CHUNK get_denominator(unsigned long len)
 {
-    return (CHUNK)pow(10, len - 1);
+    return (CHUNK)pow(10, len);
 }
 
 uint8_t get_chunk_len()
