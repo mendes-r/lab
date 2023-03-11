@@ -1,44 +1,69 @@
-#include<unistd.h>
-#include<stdio.h>
-#include<stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-unsigned int n_elements = 500;
-unsigned int array[n_elements];
+#define PROCESSES 5
+#define ELEMENTS 10
 
-int get_max(int start, int end){
+int get_max(int chunk, int level, unsigned int *array)
+{
+  unsigned int result = 0;
+  int start = chunk * (level - 1);
+  int end = chunk * level;
 
-  int result = -1;
-
-  for (int i = start; i < end; i++){
+  for (int i = start; i < end; i++)
+  {
     if (array[i] > result)
+    {
       result = array[i];
+    }
   }
 
   return result;
 }
 
-void main(void){
+int main(void)
+{
+  unsigned int final_result = 0;
+  unsigned int chunk = ELEMENTS / PROCESSES;
+  unsigned int level = 1;
 
-  
+  unsigned int array[ELEMENTS];
+
   // initialize array with random numbers from 0-255
-  for (int i = 0; i < n_elements; i++)
+  for (int i = 0; i < ELEMENTS; i++)
+  {
     array[i] = rand() % 256;
+    printf("%d, ", array[i]);
+  }
+  printf("\n");
 
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < PROCESSES; i++)
+  {
     int pid = fork();
 
-    if (pid == 0){
+    if (pid == 0)
+    {
       // child process
-      int result = get_max(0, 250);
-      printf("MAX from pid")
-
-    } else if (pid > 0) {
-      // parent process
-      // nothing
-    } else {
-      printf("ERROR");
+      int result = get_max(chunk, level, array);
+      printf("MAX from pid: %d\n", result);
+      sleep(1);
+      exit(result);
     }
+    else if (pid > 0)
+    {
+      // parent process
+      int wstatus;
+      waitpid(pid, &wstatus, 0);
 
+      if (WEXITSTATUS(wstatus) > final_result)
+        final_result = WEXITSTATUS(wstatus);
+
+      level++;
+    }
   }
 
+  printf("Result: %d\n", final_result);
+
+  return EXIT_SUCCESS;
 }
