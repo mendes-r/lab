@@ -12,12 +12,8 @@ int get_max(int chunk, int level, unsigned int *array)
   int end = chunk * level;
 
   for (int i = start; i < end; i++)
-  {
     if (array[i] > result)
-    {
       result = array[i];
-    }
-  }
 
   return result;
 }
@@ -27,8 +23,8 @@ int main(void)
   unsigned int final_result = 0;
   unsigned int chunk = ELEMENTS / PROCESSES;
   unsigned int level = 1;
-
   unsigned int array[ELEMENTS];
+  int processes[PROCESSES];
 
   // initialize array with random numbers from 0-255
   for (int i = 0; i < ELEMENTS; i++)
@@ -47,20 +43,22 @@ int main(void)
       // child process
       int result = get_max(chunk, level, array);
       printf("MAX from pid: %d\n", result);
-      sleep(1);
       exit(result);
     }
     else if (pid > 0)
     {
       // parent process
-      int wstatus;
-      waitpid(pid, &wstatus, 0);
-
-      if (WEXITSTATUS(wstatus) > final_result)
-        final_result = WEXITSTATUS(wstatus);
-
+      processes[i] = pid;
       level++;
     }
+  }
+
+  for (int i = 0; i < PROCESSES; i++)
+  {
+    int wstatus;
+    waitpid(processes[i], &wstatus, 0);
+    if (WEXITSTATUS(wstatus) > final_result)
+      final_result = WEXITSTATUS(wstatus);
   }
 
   printf("Result: %d\n", final_result);
