@@ -1,24 +1,33 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define SetBit(A,k)     ( A[(k)/8] |= (1 << ((k)%8)) )
-#define ClearBit(A,k)   ( A[(k)/8] &= ~(1 << ((k)%8)) )
-#define TestBit(A,k)    ( A[(k)/8] & (1 << ((k)%8)) )
+typedef int unit;
+#define bit_per_unit (int)sizeof(unit) * 8
+
+#define SetBit(A, k) (A[(k) / bit_per_unit] |= (1 << ((k) % bit_per_unit)))
+#define ZeroBit(A, k) (A[(k) / bit_per_unit] &= ~(1 << ((k) % bit_per_unit)))
+
+int GetBit( int A[],  int k )
+{
+    return ( (A[k/bit_per_unit] & (1 << (k%bit_per_unit) )) != 0 ) ;     
+}
 
 int main()
 {
-    uint8_t array[2];
+    printf("Array unit size: %d\n", bit_per_unit);
 
-    uint8_t result = TestBit(array, 1);
+    unit array[3];
 
-    printf("%d", result);
+    unit result = TestBit(array, 2);
+
+    printf("Before: %d", result);
     printf("\n");
 
     SetBit(array, 2);
 
-    result = TestBit(array, 2);
+    result = GetBit(array, 2);
 
-    printf("%d", result);
+    printf("After: %d", result);
     printf("\n");
 
     return 0;
