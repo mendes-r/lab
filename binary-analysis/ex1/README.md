@@ -9,28 +9,25 @@
 
 ## Commands
 
-> stopping after preprocessing,
-> and removing debug code:
+Stopping after preprocessing, and removing debug code:
 
 ```shell
 $ gcc -E -P example.c
 ```
 
-> stopping after compiling,
-> and assembly with intel sintax:
+Stopping after compiling, and assembly with intel sintax:
 
 ```shell
 $ gcc -S -masm=intel example.c
 ```
 
-> stopping after assembler,
-> outputing the object files:
+Stopping after assembler, outputing the object files:
 
 ```shell
 $ gcc -c example.c
 ```
 
-> user ***file*** command to obtain more info:
+User ***file*** command to obtain more info:
 
 ```shell
 $ file example.s
@@ -43,8 +40,8 @@ $ file example.out
 a.out: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=52f7a8058cc8139c51f7c203fd6eec46a5d0d4b7, for GNU/Linux 3.2.0, not stripped
 ```
 
-> use ***readelf*** to display the content of ELF format files:
-> in this case we want only to see the symbols.
+Use ***readelf*** to display the content of ELF format files:
+... in this case we want only to see the symbols.
 
 ```shell
 $ readelf --syms example.out
@@ -57,13 +54,13 @@ Symbol table '.dynsym' contains 5 entries:
      ...
 ```
 
-> to strip a binary from symbols and sections:
+To strip a binary from symbols and sections:
 
 ```shell
 $ strip --strip-all example.out
 ```
 
-> to disassembling a binary:
+To disassembling a binary:
 
 ```shell
 $ objdump -M intel -d example.out

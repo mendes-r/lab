@@ -27,7 +27,6 @@ typedef struct {
 
 ```sh
 $ readelf -h ls
-```
 
 ELF Header:
   Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
@@ -49,47 +48,49 @@ ELF Header:
   Size of section headers:           64 (bytes)
   Number of section headers:         32
   Section header string table index: 31
+```
 
-
-Looking at the _ls_ hex with __xxd__ hex viewer:
+ Looking at the _ls_ hex with __xxd__ hex viewer:
 
 ```sh
 $ xxd ls | head -n 30
-```
 
-``` [16 bytes] e_ident ELF ```
-00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  .ELF............ 
-``` [2 bytes] e_type ET_DYN 3 Shared object file ```
+# [16 bytes] e_ident ELF
+00000000: 7f45 4c46 0201 0100 0000 0000 0000 0000  
+# [2 bytes] e_type ET_DYN 3 Shared object file
 00000010: 0300 
-``` [2 bytes] e_machine EM_X86_64 62 = 0x3e AMD x86-64 architecture ```
+# [2 bytes] e_machine EM_X86_64 62 = 0x3e AMD x86-64 architecture
                3e00 
-``` [4 bytes] e_version EV_CURRENT 1 Current version ```
+# [4 bytes] e_version EV_CURRENT 1 Current version
                     0100 0000 
-``` [8 bytes] e_entry 0x6d30 ```
-                              306d 0000 0000 0000  ..>.....0m...... 
-``` [8 bytes] e_phoff 64 = 0x40 ```
+# [8 bytes] e_entry 0x6d30
+                              306d 0000 0000 0000 
+# [8 bytes] e_phoff 64 = 0x40
 00000020: 4000 0000 0000 0000 
-``` [8 bytes] e_shoff 139864 = 0x022258 ```
-                              5822 0200 0000 0000  @.......X"......
-``` [4 bytes] e_flag ```
+# [8 bytes] e_shoff 139864 = 0x022258
+                              5822 0200 0000 0000 
+# [4 bytes] e_flag
 00000030: 0000 0000 
-``` [2 bytes] e_ehsize 64 = 0x40 ```
+# [2 bytes] e_ehsize 64 = 0x40
                     4000 
-``` [2 bytes] e_phentsize 56 = 0x38 ```
+# [2 bytes] e_phentsize 56 = 0x38
                          3800 
-``` [2 bytes] e_phum 13 = 0x0d ```
+# [2 bytes] e_phum 13 = 0x0d
                               0d00
-``` [2 bytes] e_shentsize 64 = 0x40 ```
+# [2 bytes] e_shentsize 64 = 0x40
                                    4000 
-``` [2 bytes] e_shnum 32 = ox20 ```
+# [2 bytes] e_shnum 32 = ox20
                                         2000
-``` [2 bytes] e_shstrndxv 31 = 0x1f
-                                             1f00  ....@.8...@. ...
-00000040: 0600 0000 0400 0000 4000 0000 0000 0000  ........@.......
-00000050: 4000 0000 0000 0000 4000 0000 0000 0000  @.......@.......
-00000060: d802 0000 0000 0000 d802 0000 0000 0000  ................
-00000070: 0800 0000 0000 0000 0300 0000 0400 0000  ................
-00000080: 1803 0000 0000 0000 1803 0000 0000 0000  ................
-00000090: 1803 0000 0000 0000 1c00 0000 0000 0000  ................
-000000a0: 1c00 0000 0000 0000 0100 0000 0000 0000  ................
+# [2 bytes] e_shstrndxv 31 = 0x1f
+                                             1f00  
+00000040: 0600 0000 0400 0000 4000 0000 0000 0000  
+00000050: 4000 0000 0000 0000 4000 0000 0000 0000  
+00000060: d802 0000 0000 0000 d802 0000 0000 0000  
+00000070: 0800 0000 0000 0000 0300 0000 0400 0000 
+00000080: 1803 0000 0000 0000 1803 0000 0000 0000 
+00000090: 1803 0000 0000 0000 1c00 0000 0000 0000 
+000000a0: 1c00 0000 0000 0000 0100 0000 0000 0000  
+
+...
+```
 
