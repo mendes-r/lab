@@ -1,4 +1,4 @@
-# C-Lab
+# Low-Lab
 
-A testing ground for some ideas using the c language advantages
+A space to test languages closer to the hardware.
 
