@@ -407,3 +407,30 @@ Disassembly of section .fini:
   401148:	48 83 c4 08          	add    rsp,0x8
   40114c:	c3                   	ret
 ```
+
+An object dump for a specific section:
+
+```sh
+$ objdump -M intel -j .plt -d ls
+
+hello.c.o:     file format elf64-x86-64
+
+
+Disassembly of section .plt:
+
+0000000000401020 <puts@plt-0x10>:
+  401020:	ff 35 ca 2f 00 00    	push   QWORD PTR [rip+0x2fca]        # 403ff0 <_GLOBAL_OFFSET_TABLE_+0x8>
+  401026:	ff 25 cc 2f 00 00    	jmp    QWORD PTR [rip+0x2fcc]        # 403ff8 <_GLOBAL_OFFSET_TABLE_+0x10>
+  40102c:	0f 1f 40 00          	nop    DWORD PTR [rax+0x0]
+
+0000000000401030 <puts@plt>:
+  401030:	ff 25 ca 2f 00 00    	jmp    QWORD PTR [rip+0x2fca]        # 404000 <puts@GLIBC_2.2.5>
+  401036:	68 00 00 00 00       	push   0x0
+  40103b:	e9 e0 ff ff ff       	jmp    401020 <_init+0x20>
+
+$ objdump -M intel -j .got -d ls
+
+...
+
+```
+
